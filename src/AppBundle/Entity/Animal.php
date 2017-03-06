@@ -5,13 +5,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- *
  * @ORM\Entity()
  *
  * @UniqueEntity("reference")
+ *
+ * @ORM\HasLifecycleCallbacks()
  */
 class Animal
 {
+
     /**
      * @ORM\Id()
      * @ORM\Column(type="bigint")
@@ -45,9 +47,23 @@ class Animal
     private $color;
 
     /**
-     * @ORM\Column()
+     * @ORM\ManyToOne(targetEntity="Species")
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Species
      */
     private $species;
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function updatePrice()
+    {
+        if ($this->getPrice() === null) {
+            $this->setPrice($this->getSpecies()->getPrice());
+        }
+    }
 
     public function getId()
     {
@@ -109,17 +125,29 @@ class Animal
         return $this;
     }
 
+    /**
+     * Set the species.
+     *
+     * @param Species $species
+     *
+     * @return Animal
+     */
+    public function setSpecies(Species $species)
+    {
+        if ($this->species !== $species) {
+            $this->species = $species;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the species.
+     *
+     * @return Species
+     */
     public function getSpecies()
     {
         return $this->species;
     }
-
-    public function setSpecies($species)
-    {
-        $this->species = $species;
-        return $this;
-    }
-
-
-
 }

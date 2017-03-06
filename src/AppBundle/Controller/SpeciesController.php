@@ -5,89 +5,84 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Animal;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use AppBundle\Entity\Species;
 use Symfony\Component\BrowserKit\Response;
 
-class AnimalController extends Controller {
+class SpeciesController extends Controller {
 
     /**
-     * @Route("/animal/", name="app_animal_index")
+     * @Route("/species/", name="app_species_index")
      * @Method("GET")
      */
     public function indexAction() {
-        $repository = $this->getDoctrine()->getRepository('AppBundle:Animal');
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Species');
 
-        $animals = $repository->findAll();
+        $species = $repository->findAll();
 
         return $this->
-            render('AppBundle:Animal:index.html.twig', [
-                'entities' => $animals
+            render('AppBundle:Species:index.html.twig', [
+                'entities' => $species
             ]);
     }
 
     /**
-     * @Route("/animal/new")
+     * @Route("/species/new")
      */
     public function newAction(Request $request)
     {
-        $entity = new Animal();
+        $entity = new Species();
 
-        return $this->newOrEdit('AppBundle:Animal:new.html.twig',
+        return $this->newOrEdit('AppBundle:Species:new.html.twig',
                 $request, $entity);
     }
 
     /**
-     * @Route("/animal/{id}/edit", requirements={"id"="^\d+$"})
+     * @Route("/species/{id}/edit", requirements={"id"="^\d+$"})
      */
-    public function editAction(Request $request, Animal $entity)
+    public function editAction(Request $request, Species $entity)
     {
-        return $this->newOrEdit('AppBundle:Animal:edit.html.twig',
+        return $this->newOrEdit('AppBundle:Species:edit.html.twig',
                 $request, $entity);
     }
 
     /**
-     * @Route("/animal/{id}", requirements={"id"="^\d+$"})
+     * @Route("/species/{id}", requirements={"id"="^\d+$"})
      * @Method("GET")
      */
-    public function showAction(Animal $entity)
+    public function showAction(Species $entity)
     {
-        return $this->render('AppBundle:Animal:show.html.twig', [
+        return $this->render('AppBundle:Species:show.html.twig', [
             'entity' => $entity
         ]);
     }
 
     /**
-     * @Route("/animal/{id}/delete", requirements={"id"="^\d+$"})
+     * @Route("/species/{id}/delete", requirements={"id"="^\d+$"})
      * @Method("GET")
      */
-    public function deleteAction(Animal $entity)
+    public function deleteAction(Species $entity)
     {
         $manager = $this->getDoctrine()->getManager();
         $manager->remove($entity);
         $manager->flush();
 
-        return $this->redirectToRoute('app_animal_index');
+        return $this->redirectToRoute('app_species_index');
     }
 
     /**
-     * Do stuff for edit or create new animal.
+     * Do stuff for edit or create new species.
      *
      * @param string $template
      * @param Request $request
-     * @param Animal $entity
+     * @param Species $entity
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    protected function newOrEdit(string $template, Request $request, Animal $entity)
+    protected function newOrEdit(string $template, Request $request, Species $entity)
     {
         $form = $this->createFormBuilder($entity);
 
-        $form->add('reference');
-        $form->add('weight');
-        $form->add('price', null, ['required' => false]);
-        $form->add('birthdate');
-        $form->add('color');
-        $form->add('species');
+        $form->add('name');
+        $form->add('price');
 
         $form->add('submit', 'submit');
 
@@ -102,7 +97,7 @@ class AnimalController extends Controller {
             $manager->persist($entity);
             $manager->flush();
 
-            return $this->redirectToRoute('app_animal_index');
+            return $this->redirectToRoute('app_species_index');
         }
 
         return $this->render($template, [
