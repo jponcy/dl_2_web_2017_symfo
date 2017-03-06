@@ -1,4 +1,11 @@
 /web/bundles/
+
+
+.buildpath
+.project
+.settings/
+
+
 /app/bootstrap.php.cache
 /app/cache
 app/logs
