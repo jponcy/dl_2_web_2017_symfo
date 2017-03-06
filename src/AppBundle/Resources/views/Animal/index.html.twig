@@ -13,12 +13,46 @@
         <h1>Liste des animaux</h1>
         <a href="{{ path('app_animal_new') }}">Ajouter</a>
 
-        Liste :
-        <ul>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Référence</th>
+                    <th>Date de naissance</th>
+                    <th>Espèce</th>
+                    <th>Couleur</th>
+                    <th>Poids</th>
+                    <th>Prix</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for entity in entities %}
-            <li>{{ entity.reference }}</li>
+                <tr>
+                    <td>{{ entity.reference }}</td>
+                    <td>{{ entity.birthdate|date }}</td>
+                    <td>{{ entity.species }}</td>
+                    <td>{{ entity.color }}</td>
+                    <td>{{ entity.weight }}</td>
+                    <td>{{ entity.price }}</td>
+                    <td>
+                        <a class="btn btn-default"
+                            href="{{ path('app_animal_show', {id: entity.id}) }}">
+                            Voir
+                        </a>
+                        <a class="btn btn-default" href="{{
+                            path('app_animal_edit',
+                            {id: entity.id})
+                        }}">Edit</a>
+
+                        <a class="btn btn-danger"
+                            href="{{ path('app_animal_delete',
+                            {id: entity.id})
+                        }}">Supprimer</a>
+                    </td>
+                </tr>
             {% endfor %}
-        </ul>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

@@ -6,6 +6,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Animal;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\BrowserKit\Response;
 
 class AnimalController extends Controller {
 
@@ -30,6 +32,54 @@ class AnimalController extends Controller {
     public function newAction(Request $request)
     {
         $entity = new Animal();
+
+        return $this->newOrEdit('AppBundle:Animal:new.html.twig',
+                $request, $entity);
+    }
+
+    /**
+     * @Route("/animal/{id}/edit", requirements={"id"="^\d+$"})
+     */
+    public function editAction(Request $request, Animal $entity)
+    {
+        return $this->newOrEdit('AppBundle:Animal:edit.html.twig',
+                $request, $entity);
+    }
+
+    /**
+     * @Route("/animal/{id}", requirements={"id"="^\d+$"})
+     * @Method("GET")
+     */
+    public function showAction(Animal $entity)
+    {
+        return $this->render('AppBundle:Animal:show.html.twig', [
+            'entity' => $entity
+        ]);
+    }
+
+    /**
+     * @Route("/animal/{id}/delete", requirements={"id"="^\d+$"})
+     * @Method("GET")
+     */
+    public function deleteAction(Animal $entity)
+    {
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($entity);
+        $manager->flush();
+
+        return $this->redirectToRoute('app_animal_index');
+    }
+
+    /**
+     * Do stuff for edit or create new animal.
+     *
+     * @param string $template
+     * @param Request $request
+     * @param Animal $entity
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    protected function newOrEdit(string $template, Request $request, Animal $entity)
+    {
         $form = $this->createFormBuilder($entity);
 
         $form->add('reference');
@@ -55,7 +105,7 @@ class AnimalController extends Controller {
             return $this->redirectToRoute('app_animal_index');
         }
 
-        return $this->render('AppBundle:Animal:new.html.twig', [
+        return $this->render($template, [
             'form' => $form->createView()
         ]);
     }
