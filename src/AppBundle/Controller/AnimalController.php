@@ -6,48 +6,51 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Animal;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\BrowserKit\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+/**
+ * @Route("/animal")
+ */
 class AnimalController extends Controller {
 
     /**
-     * @Route("/animal/", name="app_animal_index")
+     * @Route("/", name="app_animal_index")
      * @Method("GET")
+     * @Template()
      */
     public function indexAction() {
         $repository = $this->getDoctrine()->getRepository('AppBundle:Animal');
 
         $animals = $repository->findAll();
 
-        return $this->
-            render('AppBundle:Animal:index.html.twig', [
-                'entities' => $animals
-            ]);
+        return [
+            'entities' => $animals
+        ];
     }
 
     /**
-     * @Route("/animal/new")
+     * @Route("/new")
+     * @Template()
      */
     public function newAction(Request $request)
     {
         $entity = new Animal();
 
-        return $this->newOrEdit('AppBundle:Animal:new.html.twig',
-                $request, $entity);
+        return $this->newOrEdit($request, $entity);
     }
 
     /**
-     * @Route("/animal/{id}/edit", requirements={"id"="^\d+$"})
+     * @Route("/{id}/edit", requirements={"id"="^\d+$"})
+     * @Template()
      */
     public function editAction(Request $request, Animal $entity)
     {
-        return $this->newOrEdit('AppBundle:Animal:edit.html.twig',
-                $request, $entity);
+        return $this->newOrEdit($request, $entity);
     }
 
     /**
-     * @Route("/animal/{id}", requirements={"id"="^\d+$"})
+     * @Route("/{id}", requirements={"id"="^\d+$"})
      * @Method("GET")
      */
     public function showAction(Animal $entity)
@@ -58,7 +61,7 @@ class AnimalController extends Controller {
     }
 
     /**
-     * @Route("/animal/{id}/delete", requirements={"id"="^\d+$"})
+     * @Route("/{id}/delete", requirements={"id"="^\d+$"})
      * @Method("GET")
      */
     public function deleteAction(Animal $entity)
@@ -78,7 +81,7 @@ class AnimalController extends Controller {
      * @param Animal $entity
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    protected function newOrEdit(string $template, Request $request, Animal $entity)
+    protected function newOrEdit(Request $request, Animal $entity)
     {
         $form = $this->createFormBuilder($entity);
 
@@ -105,8 +108,8 @@ class AnimalController extends Controller {
             return $this->redirectToRoute('app_animal_index');
         }
 
-        return $this->render($template, [
+        return [
             'form' => $form->createView()
-        ]);
+        ];
     }
 }

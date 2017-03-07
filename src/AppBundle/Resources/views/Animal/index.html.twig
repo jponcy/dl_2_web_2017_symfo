@@ -1,58 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport"
-     content="width=device-width, initial-scale=1, user-scalable=yes">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-  <title>Liste des animaux</title>
-</head>
-<body>
-    <div class="container-fluid">
-        <h1>Liste des animaux</h1>
-        <a href="{{ path('app_animal_new') }}">Ajouter</a>
+{% extends '::bootstrap_layout.html.twig' %}
 
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Référence</th>
-                    <th>Date de naissance</th>
-                    <th>Espèce</th>
-                    <th>Couleur</th>
-                    <th>Poids</th>
-                    <th>Prix</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for entity in entities %}
-                <tr>
-                    <td>{{ entity.reference }}</td>
-                    <td>{{ entity.birthdate|date }}</td>
-                    <td>{{ entity.species }}</td>
-                    <td>{{ entity.color }}</td>
-                    <td>{{ entity.weight }}</td>
-                    <td>{{ entity.price }}</td>
-                    <td>
-                        <a class="btn btn-default"
-                            href="{{ path('app_animal_show', {id: entity.id}) }}">
-                            Voir
-                        </a>
-                        <a class="btn btn-default" href="{{
-                            path('app_animal_edit',
-                            {id: entity.id})
-                        }}">Edit</a>
+{% block title %}
+Liste des animaux
+{% endblock %}
 
-                        <a class="btn btn-danger"
-                            href="{{ path('app_animal_delete',
-                            {id: entity.id})
-                        }}">Supprimer</a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+{% block body %}
+<h1>Liste des animaux</h1>
+<a href="{{ path('app_animal_new') }}">Ajouter</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Référence</th>
+            <th>Date de naissance</th>
+            <th>Espèce</th>
+            <th>Couleur</th>
+            <th>Poids</th>
+            <th>Prix</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+        <tr>
+            <td>{{ entity.reference }}</td>
+            <td>{{ entity.birthdate|date }}</td>
+            <td>{{ entity.species }}</td>
+            <td>{{ entity.color }}</td>
+            <td>{{ entity.weight }}</td>
+            <td>{{ entity.price }}</td>
+            <td>
+                <a class="btn btn-default"
+                    href="{{ path('app_animal_show', {id: entity.id}) }}">
+                    Voir
+                </a>
+                <a class="btn btn-default" href="{{
+                    path('app_animal_edit',
+                    {id: entity.id})
+                }}">Edit</a>
+
+                <a class="btn btn-danger"
+                    href="{{ path('app_animal_delete',
+                    {id: entity.id})
+                }}">Supprimer</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
